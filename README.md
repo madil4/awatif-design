@@ -1,2 +1,2 @@
-# awatif-design-codes
-Awatif Structural Design Codes and Standards
+# awatif-design
+Structural Design Codes and Standards
