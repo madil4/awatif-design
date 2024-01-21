@@ -1,49 +1,72 @@
-const TensionMemberDesign = require('./TensionMemberDesign'); 
+const TensionMemberDesign = require('./TensionMemberDesign');
 
-// Test suite for TensionMemberDesign
-describe('TensionMemberDesign', () => {
-  let timberMember;
-  let materialProps;
-  let TensileForcePermanent, TensileForceVariable, gammaG, gammaQ, gammaM, serviceClass, loadDuration, material;
+describe('TensionMemberDesign Tests', () => {
+    let timberMember;
+    let materialProps;
+    let TensileForcePermanent, TensileForceVariable, gammaG, gammaQ, gammaM, serviceClass, loadDuration, material, width, height;
 
-  // Setup before each test
-  beforeEach(() => {
-    // Setup the material properties and instantiate the class
-    materialProps = { tensileStrengthParallel: 24, modulusOfElasticity: 12000 };
-    timberMember = new TensionMemberDesign(materialProps);
+    beforeEach(() => {
+        materialProps = { tensileStrengthParallel: 11, modulusOfElasticity: 12000 };
+        timberMember = new TensionMemberDesign(materialProps);
 
-    // Define common test inputs
-    TensileForcePermanent = 50000; // N
-    TensileForceVariable = 25000; // N
-    gammaG = 1.35;
-    gammaQ = 1.5;
-    gammaM = 1.3;
-    serviceClass = '1'; // Assuming service class 1 for testing
-    loadDuration = 'permanent'; // Assuming permanent load duration for testing
-    material = 'Solid timber'; // Assuming material for testing
-  });
+        TensileForcePermanent = 8177.42; // N
+        TensileForceVariable = 1; // N
+        gammaG = 1;
+        gammaQ = 1;
+        gammaM = 1.3;
+        serviceClass = '1';
+        loadDuration = 'permanent';
+        material = 'Solid timber';
+        width = 50; // mm
+        height = 50; // mm
+    });
 
-  it('should calculate design values correctly', () => {
-    // Expected design values
-    let kmod = timberMember._getKmod(serviceClass, loadDuration, material);
-    const expectedDesignForce = TensileForcePermanent * gammaG + TensileForceVariable * gammaQ;
-    const expectedDesignCapacity = (materialProps.tensileStrengthParallel * kmod) / gammaM;
+    it('should calculate design values correctly', () => {
+        let kmod = timberMember._getKmod(serviceClass, loadDuration, material);
+        const expectedDesignForce = TensileForcePermanent * gammaG + TensileForceVariable * gammaQ;
+        const expectedDesignCapacity = (materialProps.tensileStrengthParallel * kmod) / gammaM;
 
-    // Call the calculateDesignValues method
-    const designValues = timberMember.calculateDesignValues(
-      TensileForcePermanent,
-      TensileForceVariable,
-      gammaG,
-      gammaQ,
-      gammaM,
-      serviceClass,
-      loadDuration,
-      material
-    );
+        const designValues = timberMember.calculateDesignValues(
+            TensileForcePermanent,
+            TensileForceVariable,
+            gammaG,
+            gammaQ,
+            gammaM,
+            serviceClass,
+            loadDuration,
+            material
+        );
 
-    // Expect the method to return the correct design force and capacity
-    expect(designValues.designForce).toBe(expectedDesignForce);
-    expect(designValues.designCapacity).toBeCloseTo(expectedDesignCapacity);
-  });
+        expect(designValues.designForce).toBe(expectedDesignForce);
+        expect(designValues.designCapacity).toBeCloseTo(expectedDesignCapacity, 3);
+    });
 
+    it('should calculate safety correctly', () => {
+        const designValues = timberMember.calculateDesignValues(
+            TensileForcePermanent,
+            TensileForceVariable,
+            gammaG,
+            gammaQ,
+            gammaM,
+            serviceClass,
+            loadDuration,
+            material
+        );
+
+        const safetyCheck = timberMember.checkSafety({
+            width,
+            height,
+            designForce: designValues.designForce,
+            designCapacity: designValues.designCapacity
+        });
+
+        const crossSectionalArea = width * height;
+        const expectedTensileStress = designValues.designForce / crossSectionalArea;
+        const expectedUtilizationRatio = expectedTensileStress / designValues.designCapacity;
+        const expectedIsSafe = expectedUtilizationRatio <= 1;
+
+        expect(safetyCheck.tensileStress).toBeCloseTo(expectedTensileStress, 3);
+        expect(safetyCheck.utilizationRatio).toBeCloseTo(expectedUtilizationRatio, 3);
+        expect(safetyCheck.isSafe).toBe(expectedIsSafe);
+    });
 });

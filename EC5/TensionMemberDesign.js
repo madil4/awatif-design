@@ -43,16 +43,13 @@ class TensionMemberDesign extends TimberMemberDesign {
     }
 
     // Method to calculate utilization ratio and check safety
-    checkSafety(width, height, TensileForcePermanent, TensileForceVariable, gammaG, gammaQ, gammaM) {
+      // Modified method to calculate utilization ratio and check safety
+    checkSafety({ width, height, designForce, designCapacity }) {
         // Cross-sectional area should be in mm² (square millimeters)
-        // Invoke calculateDesignValues with proper arguments
 
-        // Access tensileStrengthParallel and modulusOfElasticity from this.materialProperties
-        const { tensileStrengthParallel} = this.materialProperties;
-        const { designForce, designCapacity } = this.calculateDesignValues(TensileForcePermanent, TensileForceVariable, tensileStrengthParallel, gammaG, gammaQ, gammaM);
-
-        // Calculate cross section area
+        // Calculate cross-sectional area
         const crossSectionalArea = width * height; // width and height in [mm]
+
         // Calculate the tensile stress
         let tensileStress = designForce / crossSectionalArea;
 
@@ -63,6 +60,7 @@ class TensionMemberDesign extends TimberMemberDesign {
         let isSafe = utilizationRatio <= 1; // Safe if utilization ratio is less than or equal to 1
 
         return {
+             tensileStress: tensileStress,
             utilizationRatio: utilizationRatio,
             isSafe: isSafe
         };
