@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Würth Timber Screws Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header section -->
+<div>
+    <header>
+        <h1>Würth Timber Screw Designer</h1>
+    </header>
+</div>
+
+<!-- Main content of the page -->
+<main>
+    <p>This website calculates the axial capacity of fully threaded screws used in timber structures.</p>
+</main>
+
+<!-- Header 2 -->
+<div>
+    <header>
+        <h2>Beam Geometry</h2>
+    </header>
+</div>
+<table>
+    <tr>
+        <th><label for="Height1">Height 1 [mm]:</label></th>
+        <td><input type="number" id="Height1" value="300"></td>
+    </tr>
+    <tr>
+        <th><label for="Thickness1">Thickness 1 [mm]:</label></th>
+        <td><input type="number" id="Thickness1" value="200"></td>
+    </tr>
+    <tr>
+        <th><label for="Height2">Height 2 [mm]:</label></th>
+        <td><input type="number" id="Height2" value="400"></td>
+    </tr>
+    <tr>
+        <th><label for="Thickness2">Thickness 2 [mm]:</label></th>
+        <td><input type="number" id="Thickness2" value="200"></td>
+    </tr>
+    <tr>
+        <th><label for="alpha">Alpha [deg]:</label></th>
+        <td><input type="number" id="alpha" value="90"></td>
+    </tr>
+    <tr>
+        <th><label for="timberGrade">Timber Grade:</label></th>
+        <td><input type="text" id="timberGrade" value="GL24h"></td>
+    </tr>
+</table>
+
+<!-- Header 2 -->
+<div>
+    <header>
+        <h2>Screw Parameters</h2>
+    </header>
+</div>
+
+<!-- Input table -->
+<table>
+    <tr>
+        <th><label for="diameter">Diameter [mm]:</label></th>
+        <td><input type="number" id="diameter" value="6"></td>
+    </tr>
+    <tr>
+        <th><label for="length">Length [mm]:</label></th>
+        <td><input type="number" id="length" value="300"></td>
+    </tr>
+        <tr>
+        <th><label for="length">Length [mm]:</label></th>
+        <td><input type="number" id="length" value="300"></td>
+    </tr>
+    <tr>
+        <th><label for="connectionType">Connection Type:</label></th>
+        <td><input list="types" id="connectionType" name="connectionType" autocomplete="on"></td>
+        <datalist id="types">
+            <option value="Axial">
+            <option value="Wood to wood - Single Shear">
+            <option value="Wood to wood - Double Shear">
+            <option value="Wood to steel - Single Shear">
+            <option value="Wood to steel - Double Shear">
+        </datalist>
+    </tr>
+</table>
+
+<!-- Button to trigger the action -->
+<button onclick="calculateScrew()">Calc Screw</button>
+<!-- <button onclick="calculateScrew()">Calculate Capacity</button> -->
+
+<!-- Display result -->
+<h2>Results</h2>
+<p id="ShearCapacity"></p>
+<p id="AxialCapacity"></p>
+
+<h2>Minimum Spacings - Shear</h2>
+<p id="shear_a_1"></p>
+<p id="shear_a_2"></p>
+<p id="shear_a_3t"></p>
+<p id="shear_a_3c"></p>
+<p id="shear_a_4t"></p>
+<p id="axial_a_4c"></p>
+
+<h2>Minimum Spacings - Axial</h2>
+<p id="axial_a_1"></p>
+<p id="axial_a_2"></p>
+<p id="axial_a_1cg"></p>
+<p id="axial_a_2cg"></p>
+
+<!-- JavaScript -->
+<script src="screw_design7.js"></script>
+
+</body>
+</html>
